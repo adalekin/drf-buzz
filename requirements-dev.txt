@@ -1,0 +1,9 @@
+-r requirements.txt
+flake8
+isort
+pytest
+pytest-cov
+pytest-django
+pytest-toolbelt
+twine
+wheel
