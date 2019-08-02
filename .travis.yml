@@ -4,6 +4,7 @@ python:
 - '3.7'
 install:
 - pip install -r requirements-dev.txt
+- pip install -e .
 - pip install coveralls
 script:
 - flake8 .
