@@ -1,22 +1,14 @@
-from hamcrest import *
-
-from pytest_toolbelt import matchers
-
-
 def test_basic_validation_error(client):
     response = client.post(
         '/test/',
         format='json'
     )
 
-    assert_that(response, matchers.has_status(400))
-    assert_that(
-        response.json(),
-        has_entries(
-            code='ValidationError',
-            description='Invalid input.'
-        )
-    )
+    assert response.status_code == 400
+
+    response_data = response.json()
+    assert response_data['code'] == 'ValidationError'
+    assert response_data['description'] == 'Invalid input.'
 
 
 def test_basic_buzz(client):
@@ -25,14 +17,11 @@ def test_basic_buzz(client):
         format='json'
     )
 
-    assert_that(response, matchers.has_status(500))
-    assert_that(
-        response.json(),
-        has_entries(
-            code='DRFBuzz',
-            description='basic error'
-        )
-    )
+    assert response.status_code == 500
+
+    response_data = response.json()
+    assert response_data['code'] == 'DRFBuzz'
+    assert response_data['description'] == 'basic error'
 
 
 def test_basic_exception(client):
@@ -41,11 +30,8 @@ def test_basic_exception(client):
         format='json'
     )
 
-    assert_that(response, matchers.has_status(500))
-    assert_that(
-        response.json(),
-        has_entries(
-            code='APIException',
-            description='exception error'
-        )
-    )
+    assert response.status_code == 500
+
+    response_data = response.json()
+    assert response_data['code'] == 'APIException'
+    assert response_data['description'] == 'exception error'

@@ -4,6 +4,5 @@ isort
 pytest
 pytest-cov
 pytest-django
-pytest-toolbelt
 twine
 wheel
