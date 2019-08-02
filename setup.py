@@ -55,6 +55,7 @@ setup(
     version=version,
     description='py-buzz bindings specifically for DRF applications',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://gitlab.mytradingdata.com/common/drf-buzz',
     author='Aleksey Dalekin',
     author_email='ald@investex.com',
