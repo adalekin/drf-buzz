@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.0
+-----
+
+* `utils.get_serializer_for`
+
 0.2.1
 -----
 

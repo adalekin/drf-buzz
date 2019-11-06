@@ -5,7 +5,11 @@ from rest_framework.views import exception_handler as base_exception_handler
 
 import requests.exceptions
 
-from . import utils
+
+def is_pretty(data):
+    if "description" in data and "code" in data and isinstance(data, dict) and isinstance(data.get("fields", []), list):
+        return True
+    return False
 
 
 class DRFBuzz(buzz.Buzz, rest_framework.exceptions.APIException):
@@ -23,7 +27,7 @@ def exception_handler(exc, context):
             ...
         else:
             # Override an exception if it's a pretty enough
-            if utils.is_pretty(response_data):
+            if is_pretty(response_data):
                 status_code = exc.response.status_code
 
                 exc = rest_framework.exceptions.APIException(detail=response_data)
@@ -36,20 +40,18 @@ def exception_handler(exc, context):
         response = base_exception_handler(exc, context)
 
     if response is not None:
-        if utils.is_pretty(response.data):
+        if is_pretty(response.data):
             return response
 
-        data = {
-            'code': exc.__class__.__name__
-        }
+        data = {"code": exc.__class__.__name__}
 
-        if 'detail' in response.data:
-            description = response.data['detail']
+        if "detail" in response.data:
+            description = response.data["detail"]
         else:
             description = exc.default_detail
-            data['fields'] = response.data
+            data["fields"] = response.data
 
-        data['description'] = description
+        data["description"] = description
 
         response.data = data
 

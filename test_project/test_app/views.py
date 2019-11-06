@@ -13,8 +13,7 @@ import requests
 from . import serializers
 
 
-class TestViewSet(mixins.CreateModelMixin,
-                  viewsets.GenericViewSet):
+class TestViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     permission_classes = (AllowAny,)
 
     def create(self, request, *args, **kwargs):
@@ -23,24 +22,21 @@ class TestViewSet(mixins.CreateModelMixin,
 
         return Response()
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=["post"])
     def buzz(self, request, *args, **kwargs):
-        raise drf_buzz.DRFBuzz('basic error')
+        raise drf_buzz.DRFBuzz("basic error")
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=["post"])
     def exception(self, request, *args, **kwargs):
-        raise Exception('exception error')
+        raise Exception("exception error")
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=["post"])
     def requests(self, request, *args, **kwargs):
         r = requests.Response()
-        r.url = 'some url'
-        reason = u'Komponenttia ei löydy'
-        r.reason = reason.encode('latin-1')
-        r.raw = io.BytesIO(json.dumps({
-            'code': 'InvalidToken',
-            'description': 'Invalid token.'
-        }).encode())
+        r.url = "some url"
+        reason = u"Komponenttia ei löydy"
+        r.reason = reason.encode("latin-1")
+        r.raw = io.BytesIO(json.dumps({"code": "InvalidToken", "description": "Invalid token."}).encode())
         r.status_code = 400
         r.encoding = None
         r.raise_for_status()

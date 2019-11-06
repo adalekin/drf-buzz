@@ -8,17 +8,9 @@ from .test_app.views import TestViewSet
 
 
 router = routers.SimpleRouter()
-router.register(r'test', TestViewSet, basename='test')
+router.register(r"test", TestViewSet, basename="test")
 
-urlpatterns = [
-    url(r'^', include(router.urls)),
-]
+urlpatterns = [url(r"^", include(router.urls))]
 
-
-urlpatterns += static(
-    settings.STATIC_URL,
-    document_root=settings.STATIC_ROOT)
-
-urlpatterns += static(
-    settings.MEDIA_URL,
-    document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
