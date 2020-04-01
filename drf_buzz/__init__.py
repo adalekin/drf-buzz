@@ -9,7 +9,7 @@ from rest_framework.views import exception_handler as base_exception_handler
 import requests.exceptions
 
 LOG = logging.getLogger("django")
-VERSION = "0.3.1.dev"
+VERSION = "0.3.1"
 
 
 def is_pretty(data):
