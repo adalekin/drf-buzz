@@ -1,9 +1,15 @@
+import logging
+
 import buzz
+from django.utils.translation import ugettext_lazy as _
 
 import rest_framework.exceptions
 from rest_framework.views import exception_handler as base_exception_handler
 
 import requests.exceptions
+
+LOG = logging.getLogger("django")
+VERSION = "0.3.1.dev"
 
 
 def is_pretty(data):
@@ -24,7 +30,7 @@ def exception_handler(exc, context):
         try:
             response_data = exc.response.json()
         except ValueError:
-            ...
+            pass
         else:
             # Override an exception if it's a pretty enough
             if is_pretty(response_data):
@@ -35,9 +41,13 @@ def exception_handler(exc, context):
 
     response = base_exception_handler(exc, context)
 
+    # Uncaught exception handling
     if not response:
+        LOG.error("Exception occurred", exc_info=exc)
+
         exc = rest_framework.exceptions.APIException(exc)
         response = base_exception_handler(exc, context)
+        response.data["detail"] = _("Internal error")
 
     if response is not None:
         if is_pretty(response.data):
