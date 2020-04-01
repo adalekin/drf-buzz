@@ -1,69 +1,66 @@
+import ast
 import codecs
 import os
 import re
 
-from setuptools import Command, find_packages, setup
+from setuptools import find_packages, setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-version = "0.0.0"
-changes = os.path.join(here, "CHANGES.md")
-match = r"^#*\s*(?P<version>[0-9]+\.[0-9]+(\.[0-9]+)?)$"
-with codecs.open(changes, encoding="utf-8") as changes:
-    for line in changes:
-        res = re.match(match, line)
-        if res:
-            version = res.group("version")
-            break
 
 # Get the long description
-with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
+with codecs.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
     long_description = f.read()
 
+
 # Get version
-with codecs.open(os.path.join(here, "CHANGES.md"), encoding="utf-8") as f:
-    changelog = f.read()
+_version_re = re.compile(r"VERSION\s+=\s+(.*)")
+
+with open("drf_buzz/__init__.py", "rb") as f:
+    version = str(ast.literal_eval(_version_re.search(f.read().decode("utf-8")).group(1)))
 
 
-install_requirements = ["Django>=1.11", "djangorestframework>=3.8,<3.10", "py-buzz>=0.3.6"]
-tests_requirements = ["Django<2.2", "pytest", "pytest-cov", "pytest-django", "requests"]
+# Get requirements
+def get_requirements(env=None):
+    requirements_filename = "requirements.txt"
+
+    if env:
+        requirements_filename = "requirements-{}.txt".format(env)
+
+    with open(requirements_filename) as fp:
+        return [x.strip() for x in fp.read().split("\n") if not x.startswith("#")]
 
 
-class VersionCommand(Command):
-    description = "print library version"
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        print(version)
-
+install_requirements = get_requirements()
+test_requirements = get_requirements("test")
 
 setup(
     name="drf-buzz",
     version=version,
-    description="py-buzz bindings specifically for DRF applications",
+    description="",
     long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://gitlab.mytradingdata.com/common/drf-buzz",
+    long_description_content_type="text/x-rst",
+    url="https://github.com/adalekin/drf-buzz",
     author="Aleksey Dalekin",
-    author_email="ald@investex.com",
+    author_email="adalekin@gmail.com",
+    license="BSD",
+    platforms=["any"],
     classifiers=[
         "Development Status :: 3 - Alpha",
+        "License :: OSI Approved :: BSD License",
+        "Topic :: System :: Distributed Computing",
         "Intended Audience :: Developers",
+        "Programming Language :: Python",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
-        "Topic :: Software Development :: Libraries",
+        "Programming Language :: Python :: Implementation :: CPython",
+        "Operating System :: OS Independent",
     ],
     keywords="drf error py-buzz",
-    packages=find_packages(exclude=["test*"]),
+    packages=find_packages(),
     setup_requires=["pytest-runner"],
     install_requires=install_requirements,
-    tests_require=tests_requirements,
-    cmdclass={"version": VersionCommand},
+    tests_require=test_requirements,
+    include_package_data=True,
 )

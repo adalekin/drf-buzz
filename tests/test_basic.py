@@ -25,4 +25,4 @@ def test_basic_exception(client):
 
     response_data = response.json()
     assert response_data["code"] == "APIException"
-    assert response_data["description"] == "exception error"
+    assert response_data["description"] == "Internal error"

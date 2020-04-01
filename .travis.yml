@@ -1,13 +1,25 @@
+dist: xenial
 language: python
 python:
+- '3.5'
 - '3.6'
 - '3.7'
 install:
-- pip install -r requirements-dev.txt
-- pip install -e .
+- pip install flake8
 - pip install coveralls
 script:
 - flake8 .
-- pytest
+- python setup.py test
 after_success:
-  coveralls
+- coveralls
+before_deploy:
+- python setup.py bdist_wheel
+deploy:
+  provider: pypi
+  user: __token__
+  password:
+    secure: u1d2bPX+5G9sxBowC5zgVIMGt5ACOxEmI2EEDoUIluK7lPBFlRATqWLhAOPl+LfA3gCOGFNMpV7jNRL0aZEU1nZdncjHZTQM4EJk+F5I66/LSjbmwPnoWX4OwX4ioXpurpVrr6EYqrwOrhCLYmMGrZ1c8lQxZE/kpGcRdlZgxweL+cwoPC1WvDjFXVfLKcjAzb3sR5i5rNSs1QE3blfATCfDnlfGI9V9Q+5YgADaR+teqiQ+zQjZIIrN2VM4lq3z6XZmrUZfXCDm8U4qYtbNZzNYfts+DF06l5C1NktaC/5IyGt+whvCOoElRkUqvGU1qECl8Roian7WUpl4mmgvP6vtOGAYE6fz8ZusHCIPp2uQaOwC4ZWz10Zy18kPmvUL4mOOyc5ooRR4dkoGRPovTO+PK9cpYXwoOkn2FA7OVpSm+LTf3csSNpNypESGTU/HvI72pt6N+q4e/m/AC7Ng1gD1nksqoc0SCQ3rJzBkKfUkPKRN5rOdsfvPpYq94aY/v+/TyfJMSMz/RA6Y0AoL5kUUS1Fa9rXUnq6ILiNoyy5NMQNEbVqzEYvfRzFqF+Wv+s7yx420zxVNG5Cwd3TElxgijy1gFXyUIvC5O99YJEItJ4Ed26fuhnM2PTKRrX+uARCLLuJFHcfAKGgd1AVCJVVVgsB4QQP/mBrmWEbXNVY=
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+    python: 3.6
